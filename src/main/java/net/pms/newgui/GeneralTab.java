@@ -82,7 +82,7 @@ public class GeneralTab {
 	public JComponent build() {
 		FormLayout layout = new FormLayout(
 				"left:pref, 2dlu, p, 2dlu , p, 2dlu, p, 2dlu, pref:grow",
-				"p, 0dlu, p, 0dlu, p, 3dlu, p, 3dlu, p, 3dlu,p, 3dlu, p, 15dlu, p, 3dlu,p, 3dlu, p,  3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p,3dlu, p, 3dlu, p, 15dlu, p,3dlu, p, 3dlu, p, 15dlu, p, 3dlu, p");
+				"p, 0dlu, p, 0dlu, p, 3dlu, p, 3dlu, p, 3dlu,p, 3dlu, p, 15dlu, p, 3dlu,p, 3dlu, p,  3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 15dlu, p,3dlu, p, 3dlu, p, 3dlu, p, 15dlu, p, 3dlu, p");
 		PanelBuilder builder = new PanelBuilder(layout);
 		builder.setBorder(Borders.DLU4_BORDER);
 		builder.setOpaque(true);
@@ -315,7 +315,17 @@ public class GeneralTab {
 				configuration.setPreventsSleep((e.getStateChange() == ItemEvent.SELECTED));
 			}
 		});
-		builder.add(preventSleep, cc.xyw(1, 37, 9));
+		builder.add(preventSleep, cc.xyw(1, 35, 9));
+		
+		JCheckBox tryOtherOpenPort = new JCheckBox(Messages.getString("NetworkTab.36"));
+		tryOtherOpenPort.setSelected(configuration.isProbeOtherPorts());
+		tryOtherOpenPort.addItemListener(new ItemListener() {
+                    public void itemStateChanged(ItemEvent e) {
+                        configuration.setProbeOtherPorts((e.getStateChange() == ItemEvent.SELECTED));
+                    }
+		});
+		
+		builder.add(tryOtherOpenPort, cc.xyw(1, 37, 9));
 
 		cmp = builder.addSeparator(Messages.getString("NetworkTab.34"), cc.xyw(1, 39, 9));
 		cmp = (JComponent) cmp.getComponent(0);
