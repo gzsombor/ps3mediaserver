@@ -19,6 +19,7 @@
 package net.pms.network;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -34,6 +35,7 @@ import net.pms.configuration.PmsConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelException;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.group.ChannelGroup;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
@@ -43,7 +45,7 @@ import org.slf4j.LoggerFactory;
 
 public class HTTPServer implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(HTTPServer.class);
-	private final int port;
+	private int port;
 	private String hostName;
 	private ServerSocketChannel serverSocketChannel;
 	private ServerSocket serverSocket;
@@ -119,7 +121,7 @@ public class HTTPServer implements Runnable {
 			bootstrap.setOption("child.reuseAddress", true);
 			bootstrap.setOption("child.sendBufferSize", 65536);
 			bootstrap.setOption("child.receiveBufferSize", 65536);
-			channel = bootstrap.bind(address);
+			channel = bind(address, bootstrap);
 			group.add(channel);
 			if (hostName == null && iafinal != null) {
 				hostName = iafinal.getHostAddress();
@@ -144,6 +146,30 @@ public class HTTPServer implements Runnable {
 		return ia != null;
 	}
 
+	
+	private Channel bind(InetSocketAddress inetAddress, ServerBootstrap bootstrap) throws ChannelException,BindException {
+
+		while (true) {
+			try {
+				logger.info("trying " + inetAddress);
+				Channel c = bootstrap.bind(inetAddress);
+				logger.info("using " + inetAddress);
+				return c;
+			} catch (ChannelException e) {
+				if (e.getCause() instanceof BindException) {
+					if (PMS.getConfiguration().isProbeOtherPorts()) {
+						inetAddress = new InetSocketAddress(inetAddress.getAddress(), inetAddress.getPort() + 1);
+						this.port = inetAddress.getPort();
+					} else {
+						throw (BindException) e.getCause();
+					}
+				} else {
+					throw e;
+				}
+			}
+		}
+	}
+    
 	public void stop() {
 		logger.info("Stopping server on host " + hostName + " and port " + port + "...");
 		if (!PMS.getConfiguration().isHTTPEngineV2()) {

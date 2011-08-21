@@ -89,6 +89,7 @@ public class PmsConfiguration {
 	private static final String KEY_HIDE_TRANSCODE_FOLDER = "hide_transcode_folder";
 	private static final String KEY_HIDE_VIDEO_SETTINGS = "hidevideosettings";
 	private static final String KEY_HTTP_ENGINE_V2 = "http_engine_v2";
+        private static final String KEY_PROBE_OTHER_PORTS = "http_probe_other_port";
 	private static final String KEY_IP_FILTER = "ip_filter";
 	private static final String KEY_IPHOTO_ENABLED = "iphoto";
 	private static final String KEY_APERTURE_ENABLED = "aperture";
@@ -1691,7 +1692,15 @@ public class PmsConfiguration {
 	public boolean isHTTPEngineV2() {
 		return getBoolean(KEY_HTTP_ENGINE_V2, true);
 	}
+	
+	public boolean isProbeOtherPorts() {
+	    return getBoolean(KEY_PROBE_OTHER_PORTS, false);
+	}
 
+        public void setProbeOtherPorts(boolean value) {
+            configuration.setProperty(KEY_PROBE_OTHER_PORTS, value);
+        }
+	
 	public boolean getIphotoEnabled() {
 		return getBoolean(KEY_IPHOTO_ENABLED, false);
 	}

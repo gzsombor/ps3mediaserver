@@ -467,7 +467,9 @@ public class PMS {
 		try {
 			binding = server.start();
 		} catch (BindException b) {
-			logger.info("FATAL ERROR: Unable to bind on port: " + configuration.getServerPort() + ", because: " + b.getMessage());
+		        String msg = "FATAL ERROR: Unable to bind on port: " + configuration.getServerPort() + ", because: " + b.getMessage();
+		        getFrame().setStatusLine(msg);
+			logger.info(msg);
 			logger.info("Maybe another process is running or the hostname is wrong.");
 		}
 
