@@ -28,6 +28,8 @@ import java.io.PrintWriter;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
+import net.pms.Messages;
+import net.pms.PMS;
 import net.pms.configuration.PmsConfiguration;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.dlna.DLNAMediaAudio;
@@ -41,22 +43,20 @@ import net.pms.io.PipeProcess;
 import net.pms.io.ProcessWrapper;
 import net.pms.io.ProcessWrapperImpl;
 import net.pms.io.StreamModifier;
-import net.pms.Messages;
-import net.pms.PMS;
 import net.pms.util.CodecUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class TSMuxerVideo extends Player {
 	private static final Logger logger = LoggerFactory.getLogger(TSMuxerVideo.class);
 	public static final String ID = "tsmuxer";
-	private PmsConfiguration configuration;
+	private final PmsConfiguration configuration;
 
 	public TSMuxerVideo(PmsConfiguration configuration) {
 		this.configuration = configuration;
@@ -113,7 +113,8 @@ public class TSMuxerVideo extends Player {
 			videoType = "V_MPEG-2";
 		}
 
-		if (this instanceof TsMuxerAudio && media.getFirstAudioTrack() != null) {
+		final DLNAMediaAudio firstAudioTrack = media != null ? media.getFirstAudioTrack() : null;
+		if (this instanceof TsMuxerAudio && firstAudioTrack != null) {
 			ffVideoPipe = new PipeIPCProcess(System.currentTimeMillis() + "fakevideo", System.currentTimeMillis() + "videoout", false, true);
 			String ffmpegLPCMextract[] = new String[]{configuration.getFfmpegPath(), "-t", "" + params.timeend, "-loop_input", "-i", "resources/images/fake.jpg", "-qcomp", "0.6", "-qmin", "10", "-qmax", "51", "-qdiff", "4", "-me_range", "4", "-f", "h264", "-vcodec", "libx264", "-an", "-y", ffVideoPipe.getInputPipe()};
 			//videoType = "V_MPEG-2";
@@ -127,7 +128,7 @@ public class TSMuxerVideo extends Player {
 			ffparams.maxBufferSize = 1;
 			ffVideo = new ProcessWrapperImpl(ffmpegLPCMextract, ffparams);
 
-			if (fileName.toLowerCase().endsWith(".flac") && media != null && media.getFirstAudioTrack().getBitsperSample() >= 24 && media.getFirstAudioTrack().getSampleRate() % 48000 == 0) {
+			if (fileName.toLowerCase().endsWith(".flac") && media != null && firstAudioTrack.getBitsperSample() >= 24 && firstAudioTrack.getSampleRate() % 48000 == 0) {
 				ffAudioPipe = new PipeIPCProcess[1];
 				ffAudioPipe[0] = new PipeIPCProcess(System.currentTimeMillis() + "flacaudio", System.currentTimeMillis() + "audioout", false, true);
 				String flacCmd[] = new String[]{configuration.getFlacPath(), "--output-name=" + ffAudioPipe[0].getInputPipe(), "-d", "-f", "-F", fileName};
@@ -141,11 +142,11 @@ public class TSMuxerVideo extends Player {
 				ffAudioPipe[0] = new PipeIPCProcess(System.currentTimeMillis() + "mlpaudio", System.currentTimeMillis() + "audioout", false, true);
 				String depth = "pcm_s16le";
 				String rate = "48000";
-				if (media != null && media.getFirstAudioTrack().getBitsperSample() >= 24) {
+				if (media != null && firstAudioTrack.getBitsperSample() >= 24) {
 					depth = "pcm_s24le";
 				}
-				if (media != null && media.getFirstAudioTrack().getSampleRate() > 48000) {
-					rate = "" + media.getFirstAudioTrack().getSampleRate();
+				if (media != null && firstAudioTrack.getSampleRate() > 48000) {
+					rate = "" + firstAudioTrack.getSampleRate();
 				}
 				String flacCmd[] = new String[]{configuration.getFfmpegPath(), "-ar", rate, "-i", fileName, "-f", "wav", "-acodec", depth, "-y", ffAudioPipe[0].getInputPipe()};
 

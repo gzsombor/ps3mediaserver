@@ -230,4 +230,30 @@ public class DLNAMediaSubtitle extends DLNAMediaLang implements Cloneable {
 	public void setFileUtf8(boolean isFileUtf8) {
 		is_file_utf8 = isFileUtf8;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof DLNAMediaSubtitle)) {
+			return false;
+		}
+
+		DLNAMediaSubtitle compObj = (DLNAMediaSubtitle) obj;
+		if (type == compObj.type && (flavor == compObj.flavor || flavor.equals(compObj.flavor)) && (file == compObj.file || file.equals(compObj.file))
+				&& (utf8_file == compObj.utf8_file || utf8_file.equals(compObj.utf8_file)) && is_file_utf8 == compObj.is_file_utf8) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = 24 + type;
+		hashCode *= 24 + (flavor == null ? 1 : flavor.hashCode());
+		hashCode *= 24 + (file == null ? 1 : file.hashCode());
+		hashCode *= 24 + (utf8_file == null ? 1 : utf8_file.hashCode());
+		hashCode *= 24 + (is_file_utf8 ? 1 : 2);
+		return hashCode;
+	}
+
 }

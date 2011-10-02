@@ -231,11 +231,46 @@ public class DLNAMediaAudio extends DLNAMediaLang implements Cloneable {
 	 * 
 	 * @return The name.
 	 */
+	@Override
 	public String toString() {
 		return "Audio: " + getAudioCodec() + " / lang: " + getLang() + " / flavor: " + getFlavor() + " / ID: " + getId();
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof DLNAMediaAudio)) {
+			return false;
+		}
+
+		DLNAMediaAudio compObj = (DLNAMediaAudio) obj;
+		if (bitsperSample == compObj.bitsperSample && (sampleFrequency == compObj.sampleFrequency || sampleFrequency.equals(compObj.sampleFrequency))
+				&& nrAudioChannels == compObj.nrAudioChannels && (codecA == compObj.codecA || codecA.equals(compObj.codecA))
+				&& (album == compObj.album || album.equals(compObj.album)) && (artist == compObj.artist || artist.equals(compObj.artist))
+				&& (songname == compObj.songname || songname.equals(compObj.songname))
+				&& (genre == compObj.genre || genre.equals(compObj.genre)) && year == compObj.year && track == compObj.track
+				&& delay == compObj.delay) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = 24 + bitsperSample;
+		hashCode *= 24 + (sampleFrequency == null ? 1 : sampleFrequency.hashCode());
+		hashCode *= 24 + nrAudioChannels;
+		hashCode *= 24 + (codecA == null ? 1 : codecA.hashCode());
+		hashCode *= 24 + (album == null ? 1 : album.hashCode());
+		hashCode *= 24 + (artist == null ? 1 : artist.hashCode());
+		hashCode *= 24 + (songname == null ? 1 : songname.hashCode());
+		hashCode *= 24 + (genre == null ? 1 : genre.hashCode());
+		hashCode *= 24 + year;
+		hashCode *= 24 + track;
+		hashCode *= 24 + delay;
+		return hashCode;
+	}
+
+    @Override
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
