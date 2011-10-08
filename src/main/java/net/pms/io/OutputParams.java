@@ -74,6 +74,11 @@ public class OutputParams {
 		if (maxBufferSize < 100) {
 			maxBufferSize = 100;
 		}
+		if (configuration != null && configuration.isMinimalMemoryConfiguration()) {
+			minBufferSize = 1;
+			maxBufferSize = 4;
+			waitbeforestart = 1;
+		}
 		timeseek = 0;
 		outputFile = null;
 	}

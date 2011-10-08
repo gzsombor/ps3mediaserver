@@ -27,12 +27,6 @@ import java.util.Arrays;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-
 import net.pms.PMS;
 import net.pms.configuration.PmsConfiguration;
 import net.pms.dlna.DLNAMediaInfo;
@@ -44,9 +38,14 @@ import net.pms.io.ProcessWrapper;
 import net.pms.io.ProcessWrapperImpl;
 import net.pms.network.HTTPResource;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 public class MPlayerAudio extends Player {
 	public static final String ID = "mplayeraudio";
-	private final PmsConfiguration configuration;
+	protected final PmsConfiguration configuration;
 
 	public MPlayerAudio(PmsConfiguration configuration) {
 		this.configuration = configuration;

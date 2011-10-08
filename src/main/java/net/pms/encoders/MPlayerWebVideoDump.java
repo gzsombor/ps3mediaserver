@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import javax.swing.JComponent;
 
+import net.pms.PMS;
 import net.pms.configuration.PmsConfiguration;
 import net.pms.dlna.DLNAMediaInfo;
 import net.pms.dlna.DLNAResource;
@@ -31,7 +32,6 @@ import net.pms.io.PipeProcess;
 import net.pms.io.ProcessWrapper;
 import net.pms.io.ProcessWrapperImpl;
 import net.pms.network.HTTPResource;
-import net.pms.PMS;
 
 public class MPlayerWebVideoDump extends MPlayerAudio {
 	public MPlayerWebVideoDump(PmsConfiguration configuration) {
@@ -57,10 +57,12 @@ public class MPlayerWebVideoDump extends MPlayerAudio {
 	@Override
 	public ProcessWrapper launchTranscode(String fileName, DLNAResource dlna, DLNAMediaInfo media,
 		OutputParams params) throws IOException {
-		params.minBufferSize = params.minFileSize;
-		params.secondread_minsize = 100000;
-		params.waitbeforestart = 6000;
-		params.maxBufferSize = PMS.getConfiguration().getMaxAudioBuffer();
+		if (!configuration.isMinimalMemoryConfiguration()) {
+			params.minBufferSize = params.minFileSize;
+			params.secondread_minsize = 100000;
+			params.waitbeforestart = 6000;
+			params.maxBufferSize = PMS.getConfiguration().getMaxAudioBuffer();
+		}
 		PipeProcess audioP = new PipeProcess("mplayer_webvid" + System.currentTimeMillis());
 
 		String mPlayerdefaultAudioArgs[] = new String[]{PMS.getConfiguration().getMplayerPath(), fileName, "-nocache", "-dumpstream", "-quiet", "-dumpfile", audioP.getInputPipe()};

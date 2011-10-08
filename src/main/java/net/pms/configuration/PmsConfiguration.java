@@ -174,6 +174,7 @@ public class PmsConfiguration {
 	private static final String KEY_UUID = "uuid";
 	private static final String KEY_MENCODER_FORCED_SUB_LANG = "forced_sub_lang";
 	private static final String KEY_MENCODER_FORCED_SUB_TAGS = "forced_sub_tags";
+	private static final String KEY_MINIMAL_MEMORY_CONFIGURATION = "minimal_memory_configuration";
 
 	// the name of the subdirectory under which PMS config files are stored for this build (default: PMS).
 	// see Build for more details
@@ -1870,6 +1871,10 @@ public class PmsConfiguration {
 		configuration.setProperty(KEY_UUID, value);
 	}
 
+	public boolean isMinimalMemoryConfiguration() {
+		return getBoolean(KEY_MINIMAL_MEMORY_CONFIGURATION, false);
+	}
+
 	public void addConfigurationListener(ConfigurationListener l) {
 		configuration.addConfigurationListener(l);
 	}
@@ -1877,4 +1882,5 @@ public class PmsConfiguration {
 	public void removeConfigurationListener(ConfigurationListener l) {
 		configuration.removeConfigurationListener(l);
 	}
+
 }
