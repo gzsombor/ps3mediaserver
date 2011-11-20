@@ -18,6 +18,8 @@
  */
 package net.pms.dlna;
 
+import java.util.ArrayList;
+
 import net.pms.PMS;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.dlna.virtual.VirtualFolder;
@@ -41,13 +43,14 @@ public class FileTranscodeVirtualFolder extends VirtualFolder {
 	public void resolve() {
 		super.resolve();
 		if (!resolved && getChildren().size() == 1) { //OK
-			DLNAResource child = getChildren().get(0);
+			final DLNAResource child = getChildren().get(0);
 			child.resolve();
-			if (child.getExt().getProfiles() != null) {
+			final ArrayList<Class<? extends Player>> profiles = child.getExt().getProfiles();
+			if (profiles != null) {
 				DLNAResource ref = child;
 				Player tsMuxer = null;
-				for (int i = 0; i < child.getExt().getProfiles().size(); i++) {
-					Player pl = PlayerFactory.getPlayer(child.getExt().getProfiles().get(i), child.getExt());
+				for (int i = 0; i < profiles.size(); i++) {
+					Player pl = PlayerFactory.getPlayer(profiles.get(i), child.getExt());
 					if (pl != null && !child.getPlayer().equals(pl)) {
 						DLNAResource avisnewChild = child.clone();
 						avisnewChild.setPlayer(pl);

@@ -1767,7 +1767,7 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 	 * @return The audio object containing detailed information.
 	 * @since 1.50
 	 */
-	protected DLNAMediaAudio getMediaAudio() {
+	public DLNAMediaAudio getMediaAudio() {
 		return media_audio;
 	}
 
@@ -1789,7 +1789,7 @@ public abstract class DLNAResource extends HTTPResource implements Cloneable, Ru
 	 * @return The subtitle object containing detailed information.
 	 * @since 1.50
 	 */
-	protected DLNAMediaSubtitle getMediaSubtitle() {
+	public DLNAMediaSubtitle getMediaSubtitle() {
 		return media_subtitle;
 	}
 
