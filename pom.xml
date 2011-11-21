@@ -194,6 +194,10 @@
 					<artifactId>commons-logging</artifactId>
 					<groupId>commons-logging</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>commons-codec</artifactId>
+					<groupId>commons-codec</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -202,7 +206,6 @@
 			<artifactId>commons-io</artifactId>
 			<version>1.4</version>
 		</dependency>
-
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -249,14 +252,6 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>1.7.1</version>
-		</dependency>
-
-		<!-- originally, hamcrest-all 1.2RC2 for the artifact change, see: https://code.google.com/p/hamcrest/issues/detail?id=12#c54 
-			FIXME: verify if needed -->
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-integration</artifactId>
-			<version>1.2</version>
 		</dependency>
 
 		<dependency>
